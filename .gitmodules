@@ -1,0 +1,3 @@
+[submodule "GRU4Rec"]
+	path = GRU4Rec
+	url = https://github.com/hidasib/GRU4Rec.git
