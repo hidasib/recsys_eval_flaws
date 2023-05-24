@@ -40,17 +40,13 @@ if __name__ == "__main__":
 				if not os.path.isfile(os.path.join(test_path, negative_items_file + ".tsv")):
 					print(f"Building negative item files for: {s_sim_names}")
 					test_item_file_builder.create_test_items(gruA, n=nsample, train_path=args.train_file_path, test_path=test_file_path, out_path_prefix=os.path.join(test_path, model_name))
-				_rec, _mrr = evaluation_utils.evaluate_sampling(gruA, test, mode='conservative', negative_items_file=os.path.join(test_path, negative_items_file + ".tsv"))
-				print(_rec, _mrr)
-				ranksA = evaluation_utils.evaluate_sampling2(gruA, test, mode='conservative', negative_items_file=os.path.join(test_path, negative_items_file + ".tsv"))
+				ranksA = evaluation_utils.get_rank_sampling(gruA, test, mode='conservative', negative_items_file=os.path.join(test_path, negative_items_file + ".tsv"))
 			joblib.dump(ranksA, os.path.join('data', 'results', model_name + '_' + sname + '_rank.pickle'))
 		else:
 			ranksA = joblib.load(os.path.join('data', 'results', model_name + '_' + sname + '_rank.pickle'))
 		print('Computing recall/mrr for {} for {} samples'.format(model_name, sname))
-		print(np.min(ranksA), np.max(ranksA))
 		ranks_df = pd.DataFrame({"ranks": ranksA.flatten()}).groupby("ranks", as_index=False).agg(sizes=('ranks', 'count'))
 		ranks_df.sort_values(by=["ranks"],inplace=True)
-		print(ranks_df)
 		if sname == 'full':
 			nsample = len(gruA.itemidmap)
 		elif (sname == '100') or (sname in s_sim_names):
@@ -65,21 +61,7 @@ if __name__ == "__main__":
 		mrr = np.zeros(n)
 		mrr[ranks_df.ranks.values-1] = ranks_df.sizes.values / ranks_df.ranks.values
 		mrr = np.cumsum(mrr) / measures
-		print(recall[0], recall[4],recall[9],recall[19])
-		print(mrr[0], mrr[4],mrr[9],mrr[19])
+		print("\tRecall@[1,5,10,20]\t", f"{recall[0]:.8f}, {recall[4]:.8f}, {recall[9]:.8f}, {recall[19]:.8f}")
+		print("\tMRR@[1,5,10,20]\t\t", f"{mrr[0]:.8f}, {mrr[4]:.8f}, {mrr[9]:.8f}, {mrr[19]:.8f}")
 		pd.DataFrame(data=recall).to_csv(os.path.join('data', 'results', model_name + '_' + sname + '_recall.tsv'), index=False, header=None)
 		pd.DataFrame(data=mrr).to_csv(os.path.join('data', 'results', model_name + '_' + sname + '_mrr.tsv'), index=False, header=None)
-
-
-		# rec, mrr = [], []
-		# #TODO: speedup
-		# if sname == 'full':
-		# 	nsample = len(gruA.itemidmap)
-		# for i in range(1, nsample + 1, 1000):
-		# 	mask = (np.arange(i, min(i + 1000, nsample + 1), 1).reshape(-1, 1) >= ranksA)
-		# 	rec.append(mask.mean(axis=1))
-		# 	mrr.append((mask / ranksA).mean(axis=1))
-		# rec = np.hstack(rec)
-		# mrr = np.hstack(mrr)
-		# pd.DataFrame(data=rec.reshape(-1,1)).to_csv(os.path.join('results', model_name + sname + '_recall.tsv'), index=False, header=None)
-		# pd.DataFrame(data=mrr.reshape(-1,1)).to_csv(os.path.join('results', model_name + sname + '_mrr.tsv'), index=False, header=None)
