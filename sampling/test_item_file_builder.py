@@ -87,10 +87,10 @@ def create_test_items(gru, train_path, test_path, out_path_prefix, n):
     pd.DataFrame(index=test_items, data=popstatic).to_csv(out_path_prefix + '_popstatic.tsv', header=None, sep='\t')
 
 if __name__ == "__main__":
-    model_path = '/db_vol/hb_work/rnn/stable/models/coveo_optuna_mrr_bprmax_constrained_fulltrain.pickle'
-    train_path = '/db_vol/hb_work/rnn/data/public_raw_data/coveo_ecommerce/coveo_processed_view_train_full.tsv'
-    test_path = '/db_vol/hb_work/rnn/data/public_raw_data/coveo_ecommerce/coveo_processed_view_test.tsv'
-    out_path_prefix = '/db_vol/hb_work/coveo_test_items_bprmax'
+    model_path = ''
+    train_path = ''
+    test_path = ''
+    out_path_prefix = ''
     n = 100
     gru = gru4rec.GRU4Rec.loadmodel(model_path)
     create_test_items(gru=gru, train_path=train_path, test_path=test_path, out_path_prefix=out_path_prefix, n=n)

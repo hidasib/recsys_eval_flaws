@@ -20,10 +20,10 @@ if __name__ == "__main__":
 	test = pd.read_csv(test_file_path, sep='\t', dtype={'ItemId':'str'})
 	test_path, test_file = os.path.split(test_file_path)
 	gruA = gru4rec.GRU4Rec.loadmodel(args.model_path)
-	s_random_names = ['full', '0.1'] #, '0.01', '0.001', '100']
-	s_sim_names = ["closest", "farthest" ] #, "similar", "dissimilar", "uniform", "popular", "invpopular", "popstatic"]
+	s_random_names = ['full', '0.1', '0.01', '0.001', '100']
+	s_sim_names = ["closest", "farthest", "similar", "dissimilar", "uniform", "popular", "invpopular", "popstatic"]
 	for sname in  s_random_names + s_sim_names:
-		if not os.path.isfile(os.path.join('data', 'results', model_name + '_' + sname + '_rank.pickle')):
+		if not os.path.isfile(os.path.join('data', 'results', 'sampling_results', model_name + '_' + sname + '_rank.pickle')):
 			print('Building rank file for {} for {} samples'.format(model_name, sname))
 			if sname == 'full':
 				ranksA = evaluation_utils.get_rank(gruA, test, mode='conservative')
@@ -41,9 +41,9 @@ if __name__ == "__main__":
 					print(f"Building negative item files for: {s_sim_names}")
 					test_item_file_builder.create_test_items(gruA, n=nsample, train_path=args.train_file_path, test_path=test_file_path, out_path_prefix=os.path.join(test_path, model_name))
 				ranksA = evaluation_utils.get_rank_sampling(gruA, test, mode='conservative', negative_items_file=os.path.join(test_path, negative_items_file + ".tsv"))
-			joblib.dump(ranksA, os.path.join('data', 'results', model_name + '_' + sname + '_rank.pickle'))
+			joblib.dump(ranksA, os.path.join('data', 'results', 'sampling_results', model_name + '_' + sname + '_rank.pickle'))
 		else:
-			ranksA = joblib.load(os.path.join('data', 'results', model_name + '_' + sname + '_rank.pickle'))
+			ranksA = joblib.load(os.path.join('data', 'results', 'sampling_results', model_name + '_' + sname + '_rank.pickle'))
 		print('Computing recall/mrr for {} for {} samples'.format(model_name, sname))
 		ranks_df = pd.DataFrame({"ranks": ranksA.flatten()}).groupby("ranks", as_index=False).agg(sizes=('ranks', 'count'))
 		ranks_df.sort_values(by=["ranks"],inplace=True)
@@ -61,7 +61,10 @@ if __name__ == "__main__":
 		mrr = np.zeros(n)
 		mrr[ranks_df.ranks.values-1] = ranks_df.sizes.values / ranks_df.ranks.values
 		mrr = np.cumsum(mrr) / measures
-		print("\tRecall@[1,5,10,20]\t", f"{recall[0]:.8f}, {recall[4]:.8f}, {recall[9]:.8f}, {recall[19]:.8f}")
-		print("\tMRR@[1,5,10,20]\t\t", f"{mrr[0]:.8f}, {mrr[4]:.8f}, {mrr[9]:.8f}, {mrr[19]:.8f}")
-		pd.DataFrame(data=recall).to_csv(os.path.join('data', 'results', model_name + '_' + sname + '_recall.tsv'), index=False, header=None)
-		pd.DataFrame(data=mrr).to_csv(os.path.join('data', 'results', model_name + '_' + sname + '_mrr.tsv'), index=False, header=None)
+		for i in [0,4,9,19]:
+			if len(recall)-1 < i:
+				break
+			print(f"\tRecall@{i+1}\t", f"{recall[i]:.8f}")
+			print(f"\tMRR@{i+1}\t\t", f"{mrr[i]:.8f}")
+		pd.DataFrame(data=recall).to_csv(os.path.join('data', 'results', 'sampling_results', model_name + '_' + sname + '_recall.tsv'), index=False, header=None)
+		pd.DataFrame(data=mrr).to_csv(os.path.join('data', 'results', 'sampling_results', model_name + '_' + sname + '_mrr.tsv'), index=False, header=None)
