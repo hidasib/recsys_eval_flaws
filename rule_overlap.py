@@ -4,7 +4,7 @@ import argparse
 import os.path
 
 from split.dataset_splitter import create_l1o_split, create_adjusted_time_based_split
-from split.rules import create_sequential_rule_pairs, calculate_rule_overlap
+from rule.rule_utils import create_sequential_rule_pairs, calculate_rule_overlap
 
 def rule_overlap(dataset_name:str, full_path:str, train_path:str, test_path:str, session_key:str='SessionId', item_key:str='ItemId', time_key:str='Time') -> pd.DataFrame:
     """Calculates the A->B rule overlaps for different techniques on the dataset.
