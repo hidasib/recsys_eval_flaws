@@ -6,7 +6,7 @@ import os.path
 from split.dataset_splitter import create_l1o_split, create_adjusted_time_based_split
 from split.rules import create_sequential_rule_pairs, calculate_rule_overlap
 
-def rule_overlap(full_path:str, train_path:str, test_path:str, session_key:str='SessionId', item_key:str='ItemId', time_key:str='Time') -> pd.DataFrame:
+def rule_overlap(dataset_name:str, full_path:str, train_path:str, test_path:str, session_key:str='SessionId', item_key:str='ItemId', time_key:str='Time') -> pd.DataFrame:
     """Calculates the A->B rule overlaps for different techniques on the dataset.
 
     Args:
@@ -22,7 +22,6 @@ def rule_overlap(full_path:str, train_path:str, test_path:str, session_key:str='
     """
     #NOTE: It is assumed, that all 3 dataset contain sessions with at least 2 events 
     result = pd.DataFrame({"dataset_name":[], "method":[], "overlap":[]})
-    dataset_name = os.path.split(full_path)[-1].split('_')[0]
     data_full = pd.read_csv(full_path, sep='\t', dtype={session_key:str, item_key:str, time_key:int})
     
     print("Calculating overlap for 'leave-one-out' technique")
@@ -80,5 +79,7 @@ if __name__ == '__main__':
     parser.add_argument('--train_path', type=str)
     parser.add_argument('--test_path', type=str)
     args = parser.parse_args()
-    result = rule_overlap(args.full_path, args.train_path, args.test_path)
+    dataset_name = os.path.split(args.full_path)[-1].split('_')[0]
+    result = rule_overlap(dataset_name, args.full_path, args.train_path, args.test_path)
     print(result)
+    result.to_csv(os.path.join("data", "results", "rule_overlap", f"{dataset_name}_rule_overlap.tsv"), index=False, sep='\t')
