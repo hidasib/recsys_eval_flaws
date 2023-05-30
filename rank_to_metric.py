@@ -14,7 +14,7 @@ if __name__ == "__main__":
 	parser.add_argument('--model_path', type=str)
 	args = parser.parse_args()
 
-	test_file_path = args.test_file_path
+	test_file_path = args.test_path
 	model_name = os.path.split(args.model_path)[-1][:-7]
 
 	test = pd.read_csv(test_file_path, sep='\t', dtype={'ItemId':'str'})
@@ -39,7 +39,7 @@ if __name__ == "__main__":
 				negative_items_file = model_name + '_' + sname
 				if not os.path.isfile(os.path.join(test_path, negative_items_file + ".tsv")):
 					print(f"Building negative item files for: {s_sim_names}")
-					test_item_file_builder.create_test_items(gruA, n=nsample, train_path=args.train_file_path, test_path=test_file_path, out_path_prefix=os.path.join(test_path, model_name))
+					test_item_file_builder.create_test_items(gruA, n=nsample, train_path=args.train_path, test_path=test_file_path, out_path_prefix=os.path.join(test_path, model_name))
 				ranksA = evaluation_utils.get_rank_sampling(gruA, test, mode='conservative', negative_items_file=os.path.join(test_path, negative_items_file + ".tsv"))
 			joblib.dump(ranksA, os.path.join('data', 'results', 'sampling_results', model_name + '_' + sname + '_rank.pickle'))
 		else:
