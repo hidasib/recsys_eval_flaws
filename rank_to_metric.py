@@ -9,8 +9,8 @@ import argparse
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
-	parser.add_argument('--test_file_path', type=str)
-	parser.add_argument('--train_file_path', type=str)
+	parser.add_argument('--test_path', type=str)
+	parser.add_argument('--train_path', type=str)
 	parser.add_argument('--model_path', type=str)
 	args = parser.parse_args()
 
