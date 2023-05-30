@@ -7,12 +7,12 @@ from split.dataset_splitter import create_l1o_split, create_adjusted_time_based_
 from rule.rule_utils import create_sequential_rule_pairs, calculate_rule_overlap
 
 def rule_overlap(dataset_name:str, full_path:str, train_path:str, test_path:str, session_key:str='SessionId', item_key:str='ItemId', time_key:str='Time') -> pd.DataFrame:
-    """Calculates the A->B rule overlaps for different techniques on the dataset.
+    """Calculates the A->B rule overlaps between test and train set for different splitting techniques.
 
     Args:
         full_path (str): Path to the full dataset
-        train_path (str): Path to the train dataset
-        test_path (str): Path to the test dataset
+        train_path (str): Path to the train dataset (original time based split)
+        test_path (str): Path to the test dataset (original time based split)
         session_key (str, optional): Column name of the sessin ID. Defaults to 'SessionId'.
         item_key (str, optional): Column name of the item ID. Defaults to 'ItemId'.
         time_key (int, optional): Column name of the timestamp. Defaults to 'Time'.
@@ -20,7 +20,7 @@ def rule_overlap(dataset_name:str, full_path:str, train_path:str, test_path:str,
     Returns:
         pd.DataFrame: DataFrame containing the results: dataset_name, method, overlap
     """
-    #NOTE: It is assumed, that all 3 dataset contain sessions with at least 2 events 
+    #NOTE: It is assumed, that all 3 datasets contain sessions with at least 2 events 
     result = pd.DataFrame({"dataset_name":[], "method":[], "overlap":[]})
     data_full = pd.read_csv(full_path, sep='\t', dtype={session_key:str, item_key:str, time_key:int})
     
