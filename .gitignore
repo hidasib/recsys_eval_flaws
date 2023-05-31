@@ -1,3 +1,4 @@
 *.pickle
 *.tsv
 *.pyc
+*.json
