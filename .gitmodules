@@ -1,3 +1,6 @@
 [submodule "GRU4Rec"]
 	path = GRU4Rec
 	url = https://github.com/hidasib/GRU4Rec.git
+[submodule "session_rec"]
+	path = session_rec
+	url = https://github.com/czappi44/session_rec.git
