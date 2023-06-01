@@ -83,8 +83,8 @@ if __name__ == '__main__':
     
     _, fn = os.path.split(args.train_path)
     res_f_name = f"optuna_recall_{args.model}_maxiter{args.max_iters}_{fn[:-4]}"
-    log_path = os.path.join("data", "results", "vskk_paropt", f"{res_f_name}.json")
-    log_path_best = os.path.join("data", "results", "vskk_paropt", f"{res_f_name}_best.json")
+    log_path = os.path.join("data", "results", "vsknn_paropt", f"{res_f_name}.json")
+    log_path_best = os.path.join("data", "results", "vsknn_paropt", f"{res_f_name}_best.json")
     
     optuna.logging.set_verbosity(optuna.logging.WARNING)
     study = optuna.create_study(direction="maximize")
