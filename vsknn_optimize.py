@@ -39,7 +39,8 @@ class Objective:
             self.best_best["trial"] = trial.number
             self.best_best["Recall@20"] = metric
         with open(self.log_path, 'a') as file:
-            file.write(f'Trial {trial.number} with Recall@20: {metric} params: {local_config}, Best is {self.best_best["trial"]} with Recall@20: {self.best_best["Recall@20"]}. \n')
+            optim_log = {"trial": trial.number, "metric": metric, "params": local_config, "best": {"trial": self.best_best["trial"], "metric": metric}} 
+            json.dump(optim_log, file)
         return metric
 
 def get_model_class_param_grid(model_name:str):
@@ -61,9 +62,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--train_path', type=str)
     parser.add_argument('--test_path', type=str)
-    # parser.add_argument('--hist_path', type=str, default="")
     parser.add_argument('--model', type=str)
-    parser.add_argument('--eval_method', type=str, help="'all' or 'last', indicating wether to calculate metric for all test sessions, or only for the last event in the test sessions")
+    parser.add_argument('--eval_method', type=str, help="'all' or 'last', indicating wether to calculate metric for all test sessions, or only for the last event in the test sessions", default="all")
     parser.add_argument('--session_key', type=str, default="SessionId")
     parser.add_argument('--item_key', type=str, default="ItemId")
     parser.add_argument('--time_key', type=str, default="Time")
@@ -75,33 +75,11 @@ if __name__ == '__main__':
     train_data = pd.read_csv(args.train_path, sep='\t')
     train_data = train_data.sort_values(by=[args.session_key, args.time_key, args.item_key], ascending=True)
     test_data = pd.read_csv(args.test_path, sep='\t')
-    # if "full_leave_one_out" in args.train_path:
-    #     test_data = pd.concat([test_data, train_data[train_data.SessionId.isin(test_data.SessionId.unique())].copy()])
-    # elif any([x in args.test_path for x in ["random10p_leave_one_out", "random_leave_one_out", "timebased10p_leave_one_out", "timebased_leave_one_out"]]):
-    #     if args.hist_path == "": raise ValueError
-    #     hist_data = pd.read_csv(args.hist_path, sep='\t')
-    #     test_data = pd.concat([test_data, hist_data])
-    # elif "matching" in args.train_path:
-    #     pass
-    # elif "leave" not in args.train_path:
-    #     pass
-    # else:
-    #     raise NotImplementedError
     test_data = test_data.sort_values(by=[args.session_key, args.time_key, args.item_key], ascending=True)
     train_unique_items = train_data[args.item_key].unique()
     test_data = test_data[test_data[args.item_key].isin(train_unique_items)]
     session_length_test = test_data.groupby(args.session_key).size()
     test_data = test_data[test_data[args.session_key].isin(session_length_test[session_length_test > 1].index)]
-    # if len(str(train_data.iloc[0].Time)) == 13:
-    #     print("WARNING: The Timestamp should be in seconds, converting to sec from ms (ts = ts/1000)")
-    #     train_data.Time = train_data.Time.values/1000
-    #     test_data.Time = test_data.Time.values/1000
-    # elif len(str(train_data.iloc[0].Time)) != 10:
-    #     raise ValueError("Invalid Timestamp format")
-
-    # print(train_data.head(n=3))
-    # print(test_data.head(n=3))
-    # print(train_data.shape, test_data.shape, train_data.SessionId.nunique(), test_data.SessionId.nunique())
     
     _, fn = os.path.split(args.train_path)
     res_f_name = f"optuna_recall_{args.model}_maxiter{args.max_iters}_{fn[:-4]}"
