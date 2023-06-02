@@ -1,4 +1,4 @@
-setups = {
+gru4rec_ffn4rec_setups = {
     "coveo": {
         "gru4rec_params": {
             "loss": "bpr-max",
@@ -112,5 +112,170 @@ setups = {
             "logq": 1.0,
             "n_sample" : 2048,
         },
+    },
+}
+
+gru4rec_vsknn_setups = {
+    "retailrocket_full": {
+        "gru4rec_params": {
+            "loss": "bpr-max",
+            "optim": "adagrad",
+            "constrained_embedding": "True",
+            "embedding": 0,
+            "final_act": "elu-0.5",
+            "hidden_act": "tanh",
+            "layers": 224,
+            "batch_size": 80,
+            "dropout_p_embed": 0.5,
+            "dropout_p_hidden": 0.05,
+            "learning_rate": 0.05,
+            "momentum": 0.4,
+            "sample_alpha": 0.4,
+            "bpreg": 1.95,
+            "logq": 0.0,
+            "n_sample" : 2048,
+        },
+        "vsknn_params": {
+            "k": 500, 
+            "sample_size": 1000, 
+            "weighting": "log", 
+            "weighting_score": "same", 
+            "idf_weighting": 2
+        },
+    },
+    "retailrocket_91D": {
+        "gru4rec_params": {
+            "loss": "bpr-max",
+            "optim": "adagrad",
+            "constrained_embedding": "True",
+            "embedding": 0,
+            "final_act": "linear",
+            "hidden_act": "tanh",
+            "layers": 228,
+            "batch_size": 32,
+            "dropout_p_embed": 0.5,
+            "dropout_p_hidden": 0.1,
+            "learning_rate": 0.055,
+            "momentum": 0.2,
+            "sample_alpha": 0.3,
+            "bpreg": 0.25,
+            "logq": 0.0,
+            "n_sample" : 2048,
+        },
+        "vsknn_params": {
+            "k": 1000, 
+            "sample_size": 1000, 
+            "weighting": "log", 
+            "weighting_score": "same", 
+            "idf_weighting": 10
+        }
+    },
+    "retailrocket_56D": {
+        "gru4rec_params": {
+            "loss": "bpr-max",
+            "optim": "adagrad",
+            "constrained_embedding": "True",
+            "embedding": 0,
+            "final_act": "elu-1",
+            "hidden_act": "tanh",
+            "layers": 128,
+            "batch_size": 32,
+            "dropout_p_embed": 0.5,
+            "dropout_p_hidden": 0.1,
+            "learning_rate": 0.15,
+            "momentum": 0.1,
+            "sample_alpha": 0.2,
+            "bpreg": 0.35,
+            "logq": 0.0,
+            "n_sample" : 2048,
+        },
+        "vsknn_params": {
+            "k": 500, 
+            "sample_size": 500, 
+            "weighting": "log", 
+            "weighting_score": "same", 
+            "idf_weighting": 5
+        }
+    },
+    "retailrocket_28D": {
+        "gru4rec_params": {
+            "loss": "bpr-max",
+            "optim": "adagrad",
+            "constrained_embedding": "True",
+            "embedding": 0,
+            "final_act": "linear",
+            "hidden_act": "tanh",
+            "layers": 192,
+            "batch_size": 64,
+            "dropout_p_embed": 0.45,
+            "dropout_p_hidden": 0.05,
+            "learning_rate": 0.045,
+            "momentum": 0.3,
+            "sample_alpha": 0.0,
+            "bpreg": 1.35,
+            "logq": 0.0,
+            "n_sample" : 2048,
+        },
+        "vsknn_params": {
+            "k": 1000, 
+            "sample_size": 500, 
+            "weighting": "same", 
+            "weighting_score": "log", 
+            "idf_weighting": 5
+        }
+    },
+    "retailrocket_14D": {
+        "gru4rec_params": {
+            "loss": "bpr-max",
+            "optim": "adagrad",
+            "constrained_embedding": "True",
+            "embedding": 0,
+            "final_act": "elu-1",
+            "hidden_act": "tanh",
+            "layers": 96,
+            "batch_size": 176,
+            "dropout_p_embed": 0.05,
+            "dropout_p_hidden": 0.0,
+            "learning_rate": 0.115,
+            "momentum": 0.65,
+            "sample_alpha": 0.6,
+            "bpreg": 0.5,
+            "logq": 0.0,
+            "n_sample" : 2048,
+        },
+        "vsknn_params": {
+            "k": 500, 
+            "sample_size": 500, 
+            "weighting": "same", 
+            "weighting_score": "log", 
+            "idf_weighting": 1
+        }
+    },
+    "retailrocket_7D": {
+        "gru4rec_params": {
+            "loss": "bpr-max",
+            "optim": "adagrad",
+            "constrained_embedding": "True",
+            "embedding": 0,
+            "final_act": "linear",
+            "hidden_act": "tanh",
+            "layers": 224,
+            "batch_size": 64,
+            "dropout_p_embed": 0.3,
+            "dropout_p_hidden": 0.3,
+            "learning_rate": 0.025,
+            "momentum": 0.15,
+            "sample_alpha": 0.2,
+            "bpreg": 0.85,
+            "logq": 0.0,
+            "n_sample" : 2048,
+        },
+        "vsknn_params": {
+            "k": 1500, 
+            "sample_size": 2500, 
+            "weighting": "log", 
+            "weighting_score": "same", 
+            "idf_weighting": 10
+        }
     },
 }
