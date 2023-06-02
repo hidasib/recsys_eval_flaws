@@ -5,11 +5,12 @@ from typing import List
 
 def keep_last_n_days(train_path:str, ndays:List[int], test_path:str=None, session_key:str="SessionId", item_key:str="ItemId", time_key:str="Time"):
     data = pd.read_csv(train_path, sep="\t", dtype={item_key:str, time_key:int})
+    train_dir_path, train_file_name = os.path.split(train_path)
     if test_path is not None:
         test_rescale = pd.DataFrame({"dataset":[], "test_new_targets":[], "test_orig_targets":[], "scale":[]})
         test = pd.read_csv(test_path, sep="\t", dtype={item_key:str, time_key:int})
         test_orig_targets = len(test) - test[session_key].nunique()
-    train_dir_path, train_file_name = os.path.split(train_path)
+        test_rescale.loc[0] = [train_file_name, test_orig_targets, test_orig_targets, test_orig_targets/test_orig_targets]
     for i, nday in enumerate(ndays):
         tdata = data.drop(data[data.Time < data.Time.max() - 86400000 * nday].index)
         print(len(tdata), tdata.SessionId.nunique(), tdata.ItemId.nunique())
@@ -17,10 +18,10 @@ def keep_last_n_days(train_path:str, ndays:List[int], test_path:str=None, sessio
         tdata.to_csv(os.path.join(train_dir_path, new_file_name), sep="\t", index=False)
         if test_path is not None:
             test_new_targets = test.ItemId.isin(tdata.ItemId.unique()).sum() - test[session_key].nunique()
-            test_rescale.loc[i] = [new_file_name, test_new_targets, test_orig_targets, test_new_targets/test_orig_targets]
+            test_rescale.loc[i+1] = [new_file_name, test_new_targets, test_orig_targets, test_new_targets/test_orig_targets]
     if test_path is not None:
         print(test_rescale)
-        test_rescale.to_csv(os.path.join(train_dir_path, "recall_rescale.tsv"), sep='\t', index=False)
+        test_rescale.to_csv(os.path.join(train_dir_path, f"{train_file_name.split('_')[0]}_recall_rescale.tsv"), sep='\t', index=False)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
