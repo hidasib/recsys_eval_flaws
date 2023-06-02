@@ -43,7 +43,7 @@ class Objective:
             json.dump(optim_log, file)
         return metric
 
-def get_model_class_param_grid(model_name:str):
+def get_model_class_param_space(model_name:str):
     if model_name == "vsknn":
         model_param_grid = {
             "k": [50, 100, 500, 1000, 1500],
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     parser.add_argument('--max_iters', type=int, default=100)
     args = parser.parse_args()
 
-    model_class, model_param_grid = get_model_class_param_grid(args.model)
+    model_class, model_param_grid = get_model_class_param_space(args.model)
     
     train_data = pd.read_csv(args.train_path, sep='\t')
     train_data = train_data.sort_values(by=[args.session_key, args.time_key, args.item_key], ascending=True)
