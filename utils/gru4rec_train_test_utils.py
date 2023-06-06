@@ -28,4 +28,6 @@ def train_test_gru4rec_models(experiments, setups, save_model=False, n_epochs=10
                 save_path = None
             script = create_gru4rec_script(train_path=train_path, test_path=test_path, save_path=save_path, n_epochs=n_epochs, m=m, model_variant=model_variant, **params)
             print(f"executing script:\n{script}")
-            os.system(script)
+            ret_code = os.system(script)
+            if ret_code != 0:
+                raise ValueError(f"Process terminated with exit code: {ret_code}")
