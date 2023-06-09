@@ -1,7 +1,6 @@
 import sys
 sys.path.append("../GRU4Rec")
 import os
-from utils.experiment_setup import gru4rec_sampling_setups as setups
 
 def create_gru4rec_script(train_path, loss, optim, constrained_embedding, embedding, final_act, layers, batch_size, dropout_p_embed, dropout_p_hidden, learning_rate, momentum, sample_alpha, bpreg, logq, hidden_act, n_epochs, n_sample, test_path=None, save_path=None, model_variant="gru4rec", m=None):
     ps = f"layers={layers},loss={loss},bpreg={bpreg},logq={logq},final_act={final_act},hidden_act={hidden_act},n_epochs={n_epochs},batch_size={batch_size},dropout_p_embed={dropout_p_embed},dropout_p_hidden={dropout_p_hidden},learning_rate={learning_rate},momentum={momentum},sample_alpha={sample_alpha},n_sample={n_sample},constrained_embedding={constrained_embedding},embedding={embedding},adapt={optim},item_key=ItemId,session_key=SessionId,time_key=Time"
