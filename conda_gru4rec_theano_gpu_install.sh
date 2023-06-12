@@ -10,16 +10,20 @@ touch $CONDA_PREFIX/etc/conda/deactivate.d/env_vars.sh
 activate_script='#!/bin/sh
 export ORIGINAL_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
 export ORIGINAL_CUDA_HOME=$CUDA_HOME
+export ORIGINAL_CUDA_PATH=$CUDA_PATH
 export ORIGINAL_CUDA_ROOT=$CUDA_ROOT
-export LD_LIBRARY_PATH="${CONDA_PREFIX}/lib:${CONDA_PREFIX}/lib/stubs"
-export CUDA_HOME="${CONDA_PREFIX}/lib"
-export CUDA_ROOT="${CONDA_PREFIX}/lib"'
+export LD_LIBRARY_PATH="${CONDA_PREFIX}/lib"
+export CUDA_HOME="${CONDA_PREFIX}"
+export CUDA_PATH="${CONDA_PREFIX}"
+export CUDA_ROOT="${CONDA_PREFIX}"'
 deactivate_script='#!/bin/sh
 export LD_LIBRARY_PATH=$ORIGINAL_LD_LIBRARY_PATH
 export CUDA_HOME=$ORIGINAL_CUDA_HOME
+export CUDA_PATH=$ORIGINAL_CUDA_PATH
 export CUDA_ROOT=$ORIGINAL_CUDA_ROOT
 unset ORIGINAL_LD_LIBRARY_PATH
 unset ORIGINAL_CUDA_HOME
+unset ORIGINAL_CUDA_PATH
 unset ORIGINAL_CUDA_ROOT'
 printf %b "$activate_script" > $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
 printf %b "$deactivate_script" > $CONDA_PREFIX/etc/conda/deactivate.d/env_vars.sh
