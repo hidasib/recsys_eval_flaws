@@ -9,7 +9,7 @@ import os
 def main(path: str):
     data = pd.read_csv(os.path.join(path,"ratings.dat"), sep='::', header=None, names=['user_id', 'item_id', 'rating', 'timestamp'], dtype={'user_id':str, 'item_id':str, 'rating':str, 'timestamp':int})
  
-    data = data.sort_values(["user_id", "timestamp", "item_id"]).reset_index(drop=True)
+    data = data.sort_values(["user_id", "timestamp"]).reset_index(drop=True)
     data["session_id"] = np.cumsum(
         np.hstack(
             [
