@@ -2,67 +2,45 @@
 Experiments of the "Widespread flaws in offline evaluation of recommender systems" paper
 
 ## Usage
-​
 To get started with this repository, follow the instructions below:
-​
+### Setup Re​positories
 1. Clone the repository.
 ​
 2. In the root folder of the repository, run the following command to initialize the submodules:
     ```shell
     git submodule update --init --recursive
     ```
+    - 📝 NOTE: If the submodules would get some major update and pulling the latest versions would be necessary, run the following command:
+        ```shell
+        git submodule update --remote --recursive
+        ```
+## Setup Environments
+1. Install [NVIDIA Driver](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#)
+    - make sure the driver [supports](https://docs.nvidia.com/deeplearning/cudnn/support-matrix/index.html) CUDA Toolkit version up to 11.3.1
+    - [*cuda-drivers*](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#driver-installation) is enough, but installing both [*cuda-drivers* and *cuda-toolkit*](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#package-manager-installation) is correct as well (the environemnt described in the following steps, will install cudatoolkit, and makes sure it uses the environemnt's cudatoolkit instead of a global version).
 
-## Environments
-1. Install Anaconda by following the instructions [here](https://conda.io/projects/conda/en/latest/user-guide/install/index.html#regular-installation). You can choose either Anaconda or Miniconda.
+2. Install Anaconda by following the instructions [here](https://conda.io/projects/conda/en/latest/user-guide/install/index.html#regular-installation). You can choose either Anaconda or Miniconda.
 
-2. For any other experiment and for the jupyter-notebooks you can use the environment described in `eval_flaws_env.yaml`. To create the environment, run the following command:
-    ```shell
-    conda env create -f eval_flaws_env.yaml
-    ```
+3. Conda Environments 
+    - For any jupyter-notebook (visualization, vsknn experiments etc., except notebooks running GRU4Rec experiments) you can use the environment described in `conda_eval_flaws_env.yml`. To create the **eval_flavs** environment, run the following command:
+        ```shell
+        conda env create -f eval_flaws_env.yml
+        ```
+    - GRU4Rec experimnts (training, testing, notebooks) can be run from the **gru4rec_theano_gpu** environment. To create the environment, please run:
+        ```shell
+        bash conda_gru4rec_theano_gpu_install.sh
+        ```
+        - Installing with `conda_gru4rec_theano_gpu_install.sh` is strongly advised, but the environment can also be directly created with conda from the `conda_gru4rec_theano_gpu.yml`. However the installation script makes some extra steps to ensure the environment uses the correct cudatoolkit (which is installed by the environemnt, avoiding collusion with the system cudatoolkit), in this case, these steps must be perfomed manually (refer to `conda_gru4rec_theano_gpu_install.sh` for the exact steps). 
+    - 📝 NOTE: The installation process might take a few minutes, it is normal. 
 
-3. To run the experiments with GRU4Rec insall the *theano environment* by following the instructions described in the [Official GRU4Rec implementation](https://github.com/hidasib/GRU4Rec/tree/master)
+## Download link to the datasets
 
-## Experiments
-### Ranks
-1. Run the following command, replace the parameters to match your files
-    ```shell
-    THEANO_FLAGS=device=cuda0 python rank_to_metric.py --test_path data/data_sources/coveo_ecommerce/coveo_processed_view_test.tsv --train_path data/data_sources/coveo_ecommerce/coveo_processed_view_train_full.tsv --model_path data/models/coveo_optuna_mrr_bprmax_constrained_fulltrain.pickle 
-    ```
-2.
-    - Use *rank_visualize.ipynb* to create plots for model performance with different sampling techniques measured at different ranks
-    - Use *rank_visualize_bars.ipynb* to create bar plots
-
-```shell
-THEANO_FLAGS=device=cuda0 python rank_to_metric.py --test_path data/data_sources/diginetica_ecommerce/diginetica_processed_view_7_test.tsv --train_path data/data_sources/diginetica_ecommerce/diginetica_processed_view_7_train_full.tsv --model_path data/models/diginetica_optuna_mrr_bprmax_constrained_fulltrain.pickle
-```
-
-### Rules
-#### Rule overlap
-1. run the following commands
-    ```shell
-    python rule_overlap.py --full_path data/data_sources/coveo_ecommerce/coveo_processed_view_full.tsv --train_path data/data_sources/coveo_ecommerce/coveo_processed_view_train_full.tsv --test_path data/data_sources/coveo_ecommerce/coveo_processed_view_test.tsv
-    ```
-
-    ```shell
-    python rule_overlap.py --full_path data/data_sources/retailrocket_ecommerce/retailrocket_processed_view_full.tsv --train_path data/data_sources/retailrocket_ecommerce/retailrocket_processed_view_7a_train_full.tsv --test_path data/data_sources/retailrocket_ecommerce/retailrocket_processed_view_7a_test.tsv
-    ```
-
-    ```shell
-    python rule_overlap.py --full_path data/data_sources/rees46_ecommerce/rees46_processed_view_userbased_train_full.tsv --train_path data/data_sources/rees46_ecommerce/rees46_processed_view_userbased_train_tr.tsv --test_path data/data_sources/rees46_ecommerce/rees46_processed_view_userbased_test.tsv
-    ```
-
-#### New rules
-1. asd
-    ```shell
-    python rule_new_rules.py --full_path data/data_sources/coveo_ecommerce/coveo_processed_view_full.tsv
-    ```
-
-    ``` shell
-    python rule_new_rules.py --full_path data/data_sources/rees46_ecommerce/rees46_processed_view_userbased_full.tsv --time_units s
-    ```
-2. bsd
-
-### VSKNN
-    ```shell
-    python vsknn_optimize.py --train_path data/data_sources/coveo_ecommerce/coveo_processed_view_train_tr.tsv --test_path data/data_sources/coveo_ecommerce/coveo_processed_view_train_valid.tsv --model vsknn --eval_method all --max_iter 100
-    ```
+- Rees46:
+    - [Official Website](https://rees46.com/en/open-cdp)
+    - [Kaggle Dataset](https://www.kaggle.com/datasets/mkechinov/ecommerce-behavior-data-from-multi-category-store)
+​
+- Coveo:
+    - [Official Download Link](https://www.coveo.com/en/ailabs/shopper-intent-prediction-from-clickstream-e-commerce-data-with-minimal-browsing-information)
+​
+- Retailrocket:
+    - [Kaggle Dataset](https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset)
