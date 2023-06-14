@@ -8,7 +8,8 @@ def create_gru4rec_script(train_path, loss, optim, constrained_embedding, embedd
     m_arg = f" -m {' '.join([str(x) for x in m])}" if m is not None else ""
     test_path_arg = f" -t {test_path}" if test_path is not None else ""
     python_path = "PYTHONPATH=ffn4rec " if model_variant =="ffn4rec" else ""
-    script = f"THEANO_FLAGS='device=cuda0,dnn.enabled=False' {python_path}python ./GRU4Rec/run.py {train_path}{test_path_arg}{save_path_arg} -g {model_variant} -ps {ps}{m_arg}"
+    conda_arg = "conda run -n gru4rec_theano_gpu --no-capture-output"
+    script = f"{conda_arg} THEANO_FLAGS='device=cuda0,dnn.enabled=False' {python_path}python ./GRU4Rec/run.py {train_path}{test_path_arg}{save_path_arg} -g {model_variant} -ps {ps}{m_arg}"
     return script
 
 def train_test_gru4rec_models(experiments, setups, save_model=False, n_epochs=10, m=None, model_variant="gru4rec"):
