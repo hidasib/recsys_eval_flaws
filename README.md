@@ -40,9 +40,19 @@ Run the notebooks
 - Rees46:
     - [Official Website](https://rees46.com/en/open-cdp)
     - [Kaggle Dataset](https://www.kaggle.com/datasets/mkechinov/ecommerce-behavior-data-from-multi-category-store)
-​
 - Coveo:
     - [Official Download Link](https://www.coveo.com/en/ailabs/shopper-intent-prediction-from-clickstream-e-commerce-data-with-minimal-browsing-information)
-​
 - Retailrocket:
     - [Kaggle Dataset](https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset)
+- Amazon Beauty:
+    - [Dataset](https://cseweb.ucsd.edu/~jmcauley/datasets/amazon/links.html)
+    - [Download Link](http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/ratings_Beauty.csv)
+- MovieLens 10M:
+    - [Official Website](https://grouplens.org/datasets/movielens/)
+    - [Official Download Link](https://files.grouplens.org/datasets/movielens/ml-10m.zip)
+- Steam Games:
+    - [Dataset](https://cseweb.ucsd.edu/~jmcauley/datasets.html#steam_data)
+    - [Download Link](https://cseweb.ucsd.edu/~wckang/steam_reviews.json.gz)
+- Yelp:
+    - [Official Website](https://www.yelp.com/dataset)
+    - [Official Download Link](https://www.yelp.com/dataset/download)
